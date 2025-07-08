@@ -2,7 +2,7 @@ import os
 import numpy as np
 import torch
 from torch.utils.data import Dataset
-from utils import load_audio, process_audio_length, pre_process_audio_mel, peak_normalize
+from aug.utils import load_audio, process_audio_length, pre_process_audio_mel, peak_normalize
 from aug.data.data_utils import load_split_file_list, list_wav_files
 from aug.augment.pipeline import AugmentationPipeline
 

@@ -4,7 +4,7 @@ import numpy as np
 import torch
 import matplotlib.pyplot as plt
 from aug.config import Config
-from utils import load_audio, process_audio_length, pre_process_audio_mel, save_audio, peak_normalize
+from aug.utils import load_audio, process_audio_length, pre_process_audio_mel, save_audio, peak_normalize
 
 # ---- USER CONFIGURABLE ----
 CLEAN_FILES = [

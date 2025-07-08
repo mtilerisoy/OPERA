@@ -1,6 +1,6 @@
 import numpy as np
 from aug.augment.base import BaseAugmentation
-from utils import process_audio_length
+from aug.utils import process_audio_length
 
 class NoiseAugmentation(BaseAugmentation):
     """

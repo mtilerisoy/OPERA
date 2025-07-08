@@ -2,7 +2,7 @@ import os
 import torch
 from aug.config import Config
 from aug.data.dataset import NoisyICBHIDataGenerator
-from utils import set_deterministic, save_audio
+from aug.utils import set_deterministic, save_audio
 
 
 def generate_entire_augmented_dataset(config_path: str, output_dir: str, split: str = 'train'):
