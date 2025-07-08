@@ -1,0 +1,6 @@
+*.out
+debug*/
+.local/
+.vscode/
+
+ICBHI_final_database*/
