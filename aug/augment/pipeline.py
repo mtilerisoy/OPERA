@@ -8,7 +8,7 @@ class AugmentationPipeline:
     """
     Composes and applies augmentations to audio based on configuration and random selection.
     """
-    def __init__(self, config, noise_files: List[str], artefact_specs: List[dict], sr: int, duration: float, noise_loader):
+    def __init__(self, config, noise_files: List[str], artefact_specs: List[dict], sr: int, duration: float, noise_loader, noise_type: str):
         """
         Args:
             config: Configuration object or dictionary.
@@ -32,7 +32,8 @@ class AugmentationPipeline:
         self.p_clean = gen_settings.get('clean_sample_prob', 0.1)
         self.p_artefact = gen_settings.get('artefact_prob', 0.45)
         self.p_noise = gen_settings.get('ambient_noise_prob', 0.45)
-        self.noise_levels = config.get('background_noise_level_db', [-40])
+        self.noise_type = noise_type
+        self.noise_levels = config.get('noise_level', [-40])
 
     def __call__(self, clean_audio: np.ndarray) -> Tuple[np.ndarray, str]:
         """
@@ -61,8 +62,8 @@ class AugmentationPipeline:
             noise_file = random.choice(self.noise_files)
             noise_audio = self.noise_loader(noise_file, self.sr)
             noise_level = random.choice(self.noise_levels)
-            noise_aug = NoiseAugmentation(noise_audio, self.sr, self.duration, noise_level)
-            return noise_aug(clean_audio), f"noise_{noise_file}_dbfs{noise_level}"
+            noise_aug = NoiseAugmentation(noise_audio, self.sr, self.duration, noise_level, self.noise_type)
+            return noise_aug(clean_audio), f"noise_{noise_file}_{self.noise_type}_{noise_level}dB"
         
         else:
             raise ValueError(f"Unknown augmentation type: {chosen_augment}")

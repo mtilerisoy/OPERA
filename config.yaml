@@ -17,7 +17,6 @@ output_identifier: "_0001"
 # Description: Parameters that control the audio preprocessing.
 sample_rate: 16000
 target_duration_sec: 8.0
-snr_levels_db: [40]
 
 # --- Noise Injection ---
 # Description: Parameters for noise injection augmentations.
@@ -33,7 +32,9 @@ generator_settings:       # Pro
 
 # --- Background Noise Level ---
 # The target RMS level (in dBFS) to which background noise will be scaled before mixing.
-background_noise_level_db: [-50]
+noise_level: [20]
+# "snr" or "dbfs" or "augly"
+noise_type: "augly"
 
 # --- Global Seed ---
 random_seed: 42

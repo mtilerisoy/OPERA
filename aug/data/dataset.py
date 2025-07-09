@@ -39,6 +39,8 @@ class NoisyICBHIDataGenerator(Dataset):
         
         self.noise_files = list_wav_files(self.noise_data_path)
         self.noise_files.sort()
+
+        self.noise_type = config['noise_type']
         
         self.artefact_specs = [
             {'type': 'low_pass', 'cutoff_hz': 2000, 'order': 5},
@@ -53,7 +55,8 @@ class NoisyICBHIDataGenerator(Dataset):
             self.artefact_specs,
             self.sr,
             self.duration,
-            self._load_noise_audio
+            self._load_noise_audio,
+            self.noise_type
         )
 
     def _load_noise_audio(self, filename, sr):
