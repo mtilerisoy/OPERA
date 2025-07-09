@@ -48,7 +48,7 @@ if __name__ == '__main__':
     config = Config(config_path)
     output_dir = config['output_path']
 
-    # set_deterministic(config['random_seed'])
+    set_deterministic(config['random_seed'])
     
     generate_entire_augmented_dataset(config_path, output_dir, split='train')
     generate_entire_augmented_dataset(config_path, output_dir, split='test') 
