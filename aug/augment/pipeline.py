@@ -62,8 +62,8 @@ class AugmentationPipeline:
             noise_file = random.choice(self.noise_files)
             noise_audio = self.noise_loader(noise_file, self.sr)
             noise_level = random.choice(self.noise_levels)
-            noise_aug = NoiseAugmentation(noise_audio, self.sr, self.duration, noise_level, self.noise_type)
-            return noise_aug(clean_audio), f"noise_{noise_file}_{self.noise_type}_{noise_level}dB"
+            noise_aug = NoiseAugmentation(self.config, noise_audio, self.sr, self.duration, noise_level, self.noise_type)
+            return noise_aug(clean_audio), f"noise_{noise_file}_{self.noise_type}_{noise_level}"
         
         else:
             raise ValueError(f"Unknown augmentation type: {chosen_augment}")

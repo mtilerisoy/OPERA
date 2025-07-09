@@ -7,7 +7,7 @@ class NoiseAugmentation(BaseAugmentation):
     """
     Augmentation that adds ambient noise to a clean audio signal at a specified dBFS level.
     """
-    def __init__(self, noise_audio: np.ndarray, sr: int, duration: float, noise_level: float, noise_type: str):
+    def __init__(self, config, noise_audio: np.ndarray, sr: int, duration: float, noise_level: float, noise_type: str):
         """
         Args:
             noise_audio (np.ndarray): The noise audio signal.
@@ -15,6 +15,9 @@ class NoiseAugmentation(BaseAugmentation):
             duration (float): Target duration in seconds.
             background_noise_db_level (float): Target dBFS for noise.
         """
+
+        self.config = config
+
         self.noise_audio = noise_audio
         self.sr = sr
         self.duration = duration
@@ -72,6 +75,6 @@ class NoiseAugmentation(BaseAugmentation):
         
         elif self.noise_type == "augly":
             noisy_audio, _ = audaugs.add_background_noise(
-                    clean_audio, sample_rate = self.sr, background_audio=self.noise_audio, snr_level_db=self.noise_level
+                    clean_audio, sample_rate = self.sr, background_audio=self.noise_audio, snr_level_db=self.noise_level, seed=self.config.get('random_seed', 42)
                 )
         return noisy_audio 
