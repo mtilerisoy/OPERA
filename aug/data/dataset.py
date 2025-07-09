@@ -106,7 +106,7 @@ class NoisyICBHIDataGenerator(Dataset):
         if clean_audio_raw is None:
             silent_len = int(self.duration * self.sr)
             silent_audio = np.zeros(silent_len, dtype=np.float32)
-            return torch.from_numpy(silent_audio), torch.from_numpy(silent_audio), torch.from_numpy(silent_audio)
+            return torch.from_numpy(silent_audio), torch.from_numpy(silent_audio), "silent"
             
         clean_audio_processed = process_audio_length(clean_audio_raw, self.duration, self.sr)
         aug_audio, aug_type = self.pipeline(clean_audio_processed)
