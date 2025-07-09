@@ -5,6 +5,8 @@ debug*/
 
 ICBHI_final_database*/
 
+debug*
+
 *.pyc
 *.ckpt
 *cpython-310*
