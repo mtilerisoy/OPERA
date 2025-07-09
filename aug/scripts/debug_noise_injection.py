@@ -28,8 +28,13 @@ NOISE_FILES = [
     "1-24524-C-19"
 ]
 CONFIG_PATH = 'config.yaml'
-OUTPUT_DIR = 'debug_noise_injection'
 SEED = 42
+
+# SNR_DB = -50
+SNR_DB = None
+BACKGROUND_NOISE_DBFS_LEVEL = -55
+
+OUTPUT_DIR = f'debug_noise_injection__snr__{SNR_DB}dB'
 
 def set_deterministic(seed=42):
     random.seed(seed)
