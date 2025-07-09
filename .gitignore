@@ -4,3 +4,10 @@ debug*/
 .vscode/
 
 ICBHI_final_database*/
+
+*.pyc
+*.ckpt
+*cpython-310*
+*.cpython*
+*.npy
+__pycache__/
