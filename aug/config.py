@@ -29,7 +29,7 @@ class Config:
         required_keys = [
             'clean_data_path', 'clean_data_split_path', 'noise_data_path',
             'output_path', 'sample_rate', 'target_duration_sec',
-            'snr_levels_db', 'generator_settings', 'random_seed'
+            'noise_level', 'generator_settings', 'random_seed', "noise_type"
         ]
 
         for key in required_keys:
