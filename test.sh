@@ -31,5 +31,8 @@ python -c "import torch; print('CUDA Available:', torch.cuda.is_available()); pr
 export PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True
  
 echo "Starting training script..."
-python aug/scripts/generate_test_set.py
+# python aug/scripts/generate_test_set.py
+python aug/scripts/generate_test_set.py \
+    --config config_icbhidisease_generic.yaml
+
 sh scripts/eval_icbhi.sh
