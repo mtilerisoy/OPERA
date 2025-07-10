@@ -19,7 +19,7 @@ def save_audio(path: str, audio: np.ndarray, sr: int):
         sr (int): Sample rate.
     """
     
-    sf.write(path, audio, sr) 
+    sf.write(path, audio, sr)
 
 def load_audio(path: str, sr: int) -> np.ndarray:
     """

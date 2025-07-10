@@ -26,11 +26,21 @@ class Config:
             ValueError: If any required key is missing.
         """
 
-        required_keys = [
-            'clean_data_path', 'clean_data_split_path', 'noise_data_path',
-            'output_path', 'sample_rate', 'target_duration_sec',
-            'noise_level', 'generator_settings', 'random_seed', "noise_type"
-        ]
+        # Check if using generic dataset approach
+        if self._config.get('use_generic_dataset', False):
+            # Generic dataset mode - requires different parameters
+            required_keys = [
+                'dataset_name', 'sound_dir_loc_file', 'labels_file', 'split_file', 'clean_data_path', 'noise_data_path',
+                'output_path', 'sample_rate', 'target_duration_sec',
+                'noise_level', 'generator_settings', 'random_seed', 'noise_type'
+            ]
+        else:
+            # Legacy ICBHI-specific mode
+            required_keys = [
+                'clean_data_path', 'clean_data_split_path', 'noise_data_path',
+                'output_path', 'sample_rate', 'target_duration_sec',
+                'noise_level', 'generator_settings', 'random_seed', 'noise_type'
+            ]
 
         for key in required_keys:
             if key not in self._config:

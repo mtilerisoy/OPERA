@@ -1,11 +1,10 @@
 import os
-import torch
 from aug.config import Config
 from aug.data.dataset import NoisyICBHIDataGenerator
 from aug.utils import set_deterministic, save_audio
+import argparse
 
-
-def generate_entire_augmented_dataset(config_path: str, output_dir: str, split: str = 'train'):
+def generate_entire_augmented_dataset(config: Config, split: str = 'train'):
     """
     Generates the entire augmented audio dataset for a given split and saves to disk.
     
@@ -16,25 +15,23 @@ def generate_entire_augmented_dataset(config_path: str, output_dir: str, split: 
     """
     print(f"--- Generating Entire Audio Dataset for '{split}' split ---")
     
-    config = Config(config_path)
     dataset = NoisyICBHIDataGenerator(config, split, debug=True)
+    output_dir = config['output_path']
     
     if len(dataset) == 0:
         print(f"[WARNING] The generator for the '{split}' split contains 0 files. Cannot proceed with generation.")
         return
     print(f"\nGenerator instantiated successfully. Found {len(dataset)} files.")
     
-    # output_identifier = config['background_noise_level_db'][0]
-    # output_dir = output_dir + "__" + str(output_identifier) + "dB"
     os.makedirs(output_dir, exist_ok=True)
     print(f"Audio files will be saved in: '{output_dir}/'")
     
     for i in range(len(dataset)):
         data_tensor, _, aug_type = dataset[i]
-        file_name = dataset.file_list[i]
+        file_name = os.path.basename(dataset.file_paths[i])
         data_tensor = data_tensor.numpy()
         sr = config['sample_rate']
-        save_audio(os.path.join(output_dir, f"{file_name}.wav"), data_tensor, sr)
+        save_audio(os.path.join(output_dir, f"{file_name}"), data_tensor, sr)
         if i % 100 == 0:
             print(f"Saved {i} samples so far... (last aug: {aug_type})")
     
@@ -44,11 +41,18 @@ if __name__ == '__main__':
     """
     Main entry point for generating the full augmented dataset for both train and test splits.
     """
-    config_path = 'config.yaml'
-    config = Config(config_path)
-    output_dir = config['output_path']
-
+    parser = argparse.ArgumentParser(description='Generate augmented datasets using preprocessed .npy files')
+    parser.add_argument('--config', type=str, default='config_icbhidisease_generic.yaml', required=True, help='Path to YAML config file')
+    # parser.add_argument('--split', type=str, default='train', choices=['train', 'val', 'test'], 
+    #                    help='Data split to generate (default: train)')
+    
+    args = parser.parse_args()
+    
+    
+    # Set deterministic behavior
+    config = Config(args.config)
     set_deterministic(config['random_seed'])
     
-    generate_entire_augmented_dataset(config_path, output_dir, split='train')
-    generate_entire_augmented_dataset(config_path, output_dir, split='test') 
+    
+    generate_entire_augmented_dataset(config, split='train')
+    generate_entire_augmented_dataset(config, split='test') 

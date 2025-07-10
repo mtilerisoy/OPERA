@@ -3,7 +3,7 @@ import numpy as np
 import torch
 from torch.utils.data import Dataset
 from aug.utils import load_audio, process_audio_length, pre_process_audio_mel, peak_normalize
-from aug.data.data_utils import load_split_file_list, list_wav_files
+from aug.data.data_utils import load_dataset_from_npy, list_wav_files
 from aug.augment.pipeline import AugmentationPipeline
 
 class NoisyICBHIDataGenerator(Dataset):
@@ -28,19 +28,17 @@ class NoisyICBHIDataGenerator(Dataset):
         
         self.config = config
         self.debug = debug
-
+        
         self.sr = config['sample_rate']
+        self.noise_type = config['noise_type']
         self.duration = config['target_duration_sec']
+
         self.clean_data_path = config['clean_data_path']
         self.noise_data_path = config['noise_data_path']
-        
-        self.file_list = load_split_file_list(config['clean_data_split_path'], split)
-        self.file_list.sort()
+        self.file_paths, self.labels, self.splits = load_dataset_from_npy(config, split)
         
         self.noise_files = list_wav_files(self.noise_data_path)
         self.noise_files.sort()
-
-        self.noise_type = config['noise_type']
         
         self.artefact_specs = [
             {'type': 'low_pass', 'cutoff_hz': 2000, 'order': 5},
@@ -79,7 +77,7 @@ class NoisyICBHIDataGenerator(Dataset):
         Returns:
             int: Number of samples in the dataset.
         """
-        return len(self.file_list)
+        return len(self.file_paths)
 
     def __getitem__(self, idx):
         """
@@ -95,27 +93,34 @@ class NoisyICBHIDataGenerator(Dataset):
         Notes:
             - If debug is True, returns peak-normalized waveforms.
             - If debug is False, returns mel-spectrograms.
-            - If the audio file is missing, returns silent tensors.
+            - If the audio file is missing, returns silent audio.
         """
-        csv_filename = self.file_list[idx]
-        base_name = os.path.splitext(csv_filename)[0]
-        load_filename = f"{base_name}.wav"
-        clean_path = os.path.join(self.clean_data_path, load_filename)
-        clean_audio_raw = load_audio(clean_path, sr=self.sr)
-        
+        clean_audio_raw = load_audio(self.file_paths[idx], sr=self.sr)
+
         if clean_audio_raw is None:
             silent_len = int(self.duration * self.sr)
             silent_audio = np.zeros(silent_len, dtype=np.float32)
-            return torch.from_numpy(silent_audio), torch.from_numpy(silent_audio), "silent"
-            
-        clean_audio_processed = process_audio_length(clean_audio_raw, self.duration, self.sr)
+            if self.debug:
+                silent_tensor = torch.from_numpy(peak_normalize(silent_audio))
+                return silent_tensor, silent_tensor, "silent"
+            else:
+                silent_mel = pre_process_audio_mel(silent_audio, f_max=8000, sr=self.sr)
+                silent_tensor = torch.from_numpy(silent_mel)
+                return silent_tensor, silent_tensor, "silent"
+
+        clean_audio_processed = clean_audio_raw
+        # clean_audio_processed = process_audio_length(clean_audio_raw, self.duration, self.sr)
         aug_audio, aug_type = self.pipeline(clean_audio_processed)
-        
+
         if self.debug:
             aug_audio = peak_normalize(aug_audio)
             clean_audio_processed = peak_normalize(clean_audio_processed)
-            return torch.from_numpy(aug_audio), torch.from_numpy(clean_audio_processed), aug_type
-        
-        aug_audio = pre_process_audio_mel(aug_audio, f_max=8000, sr=self.sr)
-        clean_audio_processed = pre_process_audio_mel(clean_audio_processed, f_max=8000, sr=self.sr)
-        return torch.from_numpy(aug_audio), torch.from_numpy(clean_audio_processed), aug_type 
+        else:
+            aug_audio = pre_process_audio_mel(aug_audio, f_max=8000, sr=self.sr)
+            clean_audio_processed = pre_process_audio_mel(clean_audio_processed, f_max=8000, sr=self.sr)
+
+        return (
+            torch.from_numpy(aug_audio),
+            torch.from_numpy(clean_audio_processed),
+            aug_type
+        ) 
