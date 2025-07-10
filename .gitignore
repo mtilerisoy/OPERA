@@ -4,6 +4,16 @@ debug*/
 .vscode/
 
 ICBHI_final_database*/
+*.wav
+*.json
+*.webm
+*.ogg
+*.mp3
+*.m4a
+*.flac
+*.wav.gz
+*.wav.tar.gz
+*.wav.tar.gz.part
 
 debug*
 
