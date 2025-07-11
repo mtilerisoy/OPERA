@@ -52,7 +52,11 @@ if __name__ == '__main__':
     # Set deterministic behavior
     config = Config(args.config)
     set_deterministic(config['random_seed'])
-    
+    print(f"##### [INFO] Generating dataset with noise level: {config['noise_level']} #####")
     
     generate_entire_augmented_dataset(config, split='train')
-    generate_entire_augmented_dataset(config, split='test') 
+    generate_entire_augmented_dataset(config, split='test')
+    try:
+        generate_entire_augmented_dataset(config, split='val')
+    except Exception as e:
+        print(f"[DEBUG] No val split found with error: {e}")
