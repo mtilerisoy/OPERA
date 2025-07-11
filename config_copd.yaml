@@ -1,0 +1,38 @@
+# Generic Dataset Augmentation Configuration for ICBHI Disease
+# This config works with ICBHI dataset that has been preprocessed into .npy files (no label_type suffix)
+
+# Enable generic dataset mode
+use_generic_dataset: true
+
+# Dataset configuration
+dataset_name: "icbhidisease"
+
+# Feature directory (where .npy files are stored)
+feature_dir: "/home/milerisoy/OPERA/feature/copd_eval"
+
+# Dataset file names (specify the exact .npy files to use)
+sound_dir_loc_file: "sound_dir_loc.npy"
+labels_file: "labels.npy"
+split_file: "train_test_split.npy"
+
+# --- File Paths ---
+clean_data_path: "/projects/prjs1635/datasets/copd/RespiratoryDatabase@TR/"
+noise_data_path: "/projects/prjs1635/datasets/esc-50/groupped/constant"
+output_path: "/home/milerisoy/OPERA/datasets/copd/RespiratoryDatabase@TR/"
+
+# --- Preprocessing ---
+sample_rate: 16000
+target_duration_sec: 8.0
+
+# --- Noise Injection ---
+generator_settings:
+  clean_sample_prob: 1.0    # Probability of yielding a clean, unprocessed sample
+  artefact_prob: 0.0        # Probability of applying a synthetic artefact
+  ambient_noise_prob: 0.0   # Probability of injecting ambient noise
+
+# --- Background Noise Level ---
+noise_level: [0]  # Target RMS level in dBFS
+noise_type: "augly"  # "snr", "dbfs", or "augly"
+
+# --- Global Seed ---
+random_seed: 42 
