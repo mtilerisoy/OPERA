@@ -11,9 +11,11 @@ import os
 import shutil
 
 
-path = 'datasets/coughvid/public_dataset'
+# path = 'datasets/coughvid/public_dataset'
+path = "/projects/prjs1635/datasets/coughvid/public_dataset"
  
-ddir =  'datasets/coughvid/wav'
+# ddir =  'datasets/coughvid/wav'
+ddir = "/projects/prjs1635/datasets/coughvid/wav"
 
 os.makedirs(ddir)
 
