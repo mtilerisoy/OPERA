@@ -1,13 +1,13 @@
 #!/bin/bash
-#SBATCH --job-name=test_opereCE
+#SBATCH --job-name=feature_extract_all
 #SBATCH --nodes=1
-#SBATCH --ntasks-per-node=2
-#SBATCH --partition=gpu_a100
+#SBATCH --ntasks-per-node=1
+#SBATCH --partition=gpu_h100
 #SBATCH --gres=gpu:1
-#SBATCH --cpus-per-task=8
+#SBATCH --cpus-per-task=4
 #SBATCH --mem=32G
-#SBATCH --time=00:30:00
-#SBATCH --output=test_%j.out
+#SBATCH --time=01:30:00
+#SBATCH --output=feature_extract_all_%j.out
 set -x # Enable script debugging
  
 echo "Loading module 2023..."
@@ -29,10 +29,7 @@ python --version
 python -c "import torch; print('CUDA Available:', torch.cuda.is_available()); print('CUDA Devices:', torch.cuda.device_count())"
  
 export PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True
- 
-echo "Starting training script..."
-# python aug/scripts/generate_test_set.py
-python aug/scripts/generate_test_set.py \
-    --config config_icbhidisease_generic.yaml
 
-sh scripts/eval_icbhi.sh
+echo "Starting evaluation script..."
+sh scripts/extract_features_all.sh
+# ################################
