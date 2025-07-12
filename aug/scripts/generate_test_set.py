@@ -43,16 +43,15 @@ if __name__ == '__main__':
     """
     parser = argparse.ArgumentParser(description='Generate augmented datasets using preprocessed .npy files')
     parser.add_argument('--config', type=str, default='config_icbhidisease_generic.yaml', required=True, help='Path to YAML config file')
-    # parser.add_argument('--split', type=str, default='train', choices=['train', 'val', 'test'], 
-    #                    help='Data split to generate (default: train)')
+    parser.add_argument('--seed', type=int, default=42, help='Random seed for reproducibility')
     
     args = parser.parse_args()
     
-    
     # Set deterministic behavior
     config = Config(args.config)
-    set_deterministic(config['random_seed'])
-    print(f"##### [INFO] Generating dataset with noise level: {config['noise_level']} #####")
+    set_deterministic(args.seed)
+    print(f"=" * 10, f"[INFO] Using seed: {args.seed}", "=" * 10)
+    print(f"=" * 10, f"[INFO] Generating dataset with noise level: {config['noise_level']} dB", "=" * 10)
     
     generate_entire_augmented_dataset(config, split='train')
     generate_entire_augmented_dataset(config, split='test')
