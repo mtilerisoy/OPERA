@@ -16,14 +16,14 @@ def list_wav_files(directory: str) -> List[str]:
 
     return [f for f in os.listdir(directory) if f.endswith('.wav')]
 
-def modify_sound_dir_loc(sound_dir_loc: np.ndarray, clean_data_path: str) -> np.ndarray:
+def modify_sound_dir_loc(sound_dir_loc: np.ndarray, output_path: str) -> np.ndarray:
     """
-    Modifies the sound_dir_loc to point to the clean_data_path.
+    Modifies the sound_dir_loc to point to the output_path.
     """
     modified_paths = []
     for path in sound_dir_loc:
         filename = os.path.basename(path)
-        modified_path = os.path.join(clean_data_path, filename)
+        modified_path = os.path.join(output_path, filename)
         modified_paths.append(modified_path)
     return np.array(modified_paths)
 
@@ -38,7 +38,7 @@ def load_dataset_from_npy(config: dict, split: str) -> Tuple[List[str], List[int
     
     Returns:
         Tuple[List[str], List[int], List[str]]: 
-            - List of audio file paths (modified to point to clean_data_path)
+            - List of audio file paths (modified to point to output_path)
             - List of labels
             - List of split assignments
     """
@@ -49,10 +49,10 @@ def load_dataset_from_npy(config: dict, split: str) -> Tuple[List[str], List[int
     labels = np.load(os.path.join(feature_dir, config['labels_file']), allow_pickle=True)
     splits = np.load(os.path.join(feature_dir, config['split_file']), allow_pickle=True)
     
-    # Extract base filenames and prepend clean_data_path
-    clean_data_path = config['clean_data_path']
-    if clean_data_path:
-        sound_dir_loc = modify_sound_dir_loc(sound_dir_loc, clean_data_path)
+    # Extract base filenames and prepend output_path
+    output_path = config['output_path']
+    if output_path:
+        sound_dir_loc = modify_sound_dir_loc(sound_dir_loc, output_path)
     
     # Filter by split (or return all if split is 'all')
     if split == 'all':
