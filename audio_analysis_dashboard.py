@@ -37,7 +37,7 @@ DATASET_CONFIG: Dict[str, DatasetPaths] = {
         "audio_dir": "/projects/prjs1635/datasets/esc-50/groupped/constant",
     },
     "icbhi": {
-        "audio_dir": "/projects/prjs1635/datasets(icbhi/ICBHI_final_database",
+        "audio_dir": "/home/milerisoy/OPERA/datasets/icbhi/ICBHI_final_database",
     },
     "synthetic": {
         "audio_dir": "/home/milerisoy/OPERA/datasets/icbhi/ICBHI_final_database",
